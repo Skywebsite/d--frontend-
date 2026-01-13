@@ -3,10 +3,12 @@ import Chat from './Chat'
 import RecentSearches from './RecentSearches'
 import './index.css'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { Menu, X } from 'lucide-react';
 
 function App() {
   const [searches, setSearches] = useState([]);
   const [activeSearch, setActiveSearch] = useState('');
+  const [showMobileSidebar, setShowMobileSidebar] = useState(false);
 
   const handleNewSearch = (query) => {
     setSearches(prev => {
@@ -37,19 +39,42 @@ function App() {
           backgroundColor="#000000"
         />
       </div>
+
+      {/* Mobile Header / Hamburger */}
+      <div className="mobile-header">
+        <button onClick={() => setShowMobileSidebar(true)} className="icon-btn">
+          <Menu color="white" />
+        </button>
+      </div>
+
       <main style={{ position: 'relative', zIndex: 1 }}>
         <Chat onSearch={handleNewSearch} activeSearch={activeSearch} />
       </main>
 
-      <div style={{
-        position: 'fixed',
-        right: '20px',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        zIndex: 10
-      }}>
-        <RecentSearches searches={searches} onSelect={setActiveSearch} />
+      {/* Recent Searches Wrapper (Desktop Right / Mobile Sidebar) */}
+      <div className={`recent-searches-wrapper ${showMobileSidebar ? 'open' : ''}`}>
+        {/* Close Button for Mobile */}
+        <button
+          className="mobile-close-btn"
+          onClick={() => setShowMobileSidebar(false)}
+        >
+          <X color="white" />
+        </button>
+
+        <RecentSearches
+          searches={searches}
+          onSelect={(term) => {
+            setActiveSearch(term);
+            setShowMobileSidebar(false); // Close on select
+          }}
+        />
       </div>
+
+      {/* Overlay for mobile sidebar */}
+      {showMobileSidebar && (
+        <div className="sidebar-overlay" onClick={() => setShowMobileSidebar(false)} />
+      )}
+
     </div>
   )
 }
