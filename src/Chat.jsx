@@ -32,14 +32,21 @@ const Chat = ({ onSearch, activeSearch }) => {
         if (!input.trim() || isLoading) return;
 
         const userMessage = input.trim();
+        const updatedMessages = [...messages, { role: 'user', content: userMessage }];
+        
         setInput('');
-        setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+        setMessages(updatedMessages);
         setIsLoading(true);
         if (onSearch) onSearch(userMessage);
 
         try {
+            // Send conversation history along with the current question
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/ai/chat`, {
-                question: userMessage
+                question: userMessage,
+                conversationHistory: updatedMessages.map(msg => ({
+                    role: msg.role,
+                    content: msg.content
+                }))
             });
 
             const { answer, sources } = response.data;
