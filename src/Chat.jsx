@@ -113,6 +113,54 @@ const Chat = ({ onSearch, activeSearch }) => {
                                     >
                                         {msg.content}
                                     </ReactMarkdown>
+
+                                    {/* Event Sources / Cards */}
+                                    {msg.sources && msg.sources.length > 0 && (
+                                        <div style={{
+                                            marginTop: '12px',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '8px',
+                                            borderTop: '1px solid rgba(0,0,0,0.05)',
+                                            paddingTop: '12px'
+                                        }}>
+                                            <div style={{
+                                                fontSize: '0.75rem',
+                                                fontWeight: 600,
+                                                color: '#888',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: '0.5px',
+                                                marginBottom: '4px'
+                                            }}>
+                                                Found {msg.sources.length} Event{msg.sources.length !== 1 ? 's' : ''}:
+                                            </div>
+                                            {msg.sources.map((event, i) => (
+                                                <div key={i} style={{
+                                                    background: 'white',
+                                                    border: '1px solid #e0e0e0',
+                                                    borderRadius: '12px',
+                                                    padding: '12px',
+                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.02)',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    gap: '4px'
+                                                }}>
+                                                    <h4 style={{ margin: 0, fontSize: '0.95rem', color: '#1e88e5', fontWeight: 600 }}>
+                                                        {event.event_details?.event_name || 'Event Name Unavailable'}
+                                                    </h4>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#555', flexWrap: 'wrap', gap: '4px' }}>
+                                                        <span>📅 {event.event_details?.event_date || 'Date TBA'}</span>
+                                                        <span>📍 {event.event_details?.location || 'Location TBA'}</span>
+                                                    </div>
+                                                    {event.event_details?.event_time && (
+                                                        <div style={{ fontSize: '0.8rem', color: '#777' }}>
+                                                            🕒 {event.event_details.event_time}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>
